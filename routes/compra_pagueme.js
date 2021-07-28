@@ -8,13 +8,13 @@ router.get('/:compra_id/status', function (req, res, next) {
     let message = {};
     switch (result.data.status) {
       case 'processing':
-        message = { 'Status': 'NotFinished' };
+        message = { 'Method':'Pague-me','Status': 'NotFinished' };
         break;
       case 'paid':
-        message = { 'Status': 'Authorized and paid' };
+        message = { 'Method':'Pague-me','Status': 'Authorized and paid' };
         break;
       default:
-        message = { 'Status': 'Failed' };
+        message = { 'Method':'Pague-me','Status': 'Failed' };
     }
     res.send(message);
   })
@@ -31,14 +31,14 @@ router.post('/', function (req, res, next) {
         if (result.data.status == "paid") {
           res.status(201).send({
             "Status": "Sucessful",
-            "Message": "Done with sucessful",
+            "Message": "Done with sucessful by Pague-me",
             "paymentID": paymentID
           });
         }
         else {
           res.status(402).send({
             "Status": "Failed",
-            "Message": "Problem with the credit card"
+            "Message": "Problem with the credit card by Pague-me"
           });
         }
       })

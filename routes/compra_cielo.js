@@ -8,19 +8,19 @@ router.get('/:compra_id/status', function (req, res, next) {
     let message = {};
     switch (result.Payment.Status) {
       case 0:
-        message = { 'Status': 'NotFinished' };
+        message = { 'Method':'Cielo','Status': 'NotFinished' };
         break;
       case 1:
-        message = { 'Status': 'Authorized' };
+        message = {'Method':'Cielo', 'Status': 'Authorized' };
         break;
       case 2:
-        message = { 'Status': 'Payment Confirmed' };
+        message = {'Method':'Cielo', 'Status': 'Payment Confirmed' };
         break;
       case 3:
-        message = { 'Status': 'Denied' };
+        message = {'Method':'Cielo', 'Status': 'Denied' };
         break;
       default:
-        message = { 'Status': 'Failed' };
+        message = {'Method':'Cielo', 'Status': 'Failed' };
     }
     res.send(message);
   })
@@ -36,14 +36,14 @@ router.post('/', function (req, res, next) {
         if (result.Status == 2) {
           res.status(201).send({
             "Status": "Sucessful",
-            "Message": "Done with sucessful",
+            "Message": "Done with sucessful by Cielo",
             "paymentID": paymentID
           });
         }
         else {
           res.status(402).send({
             "Status": "Failed",
-            "Message": "Problem with the credit card"
+            "Message": "Problem with the credit card by Cielo"
           });
         }
 

@@ -4,7 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var comprasRouter = require('./routes/compras');
+var compraPaguemeRouter = require('./routes/compra_pagueme');
+var compraCieloRouter = require('./routes/compra_cielo');
 
 var app = express();
 
@@ -14,7 +15,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/ecommerce-api/v1/compras', comprasRouter);
+app.use('/ecommerce-api/v1/compra-pagueme', compraPaguemeRouter);
+app.use('/ecommerce-api/v1/compra-cielo', compraCieloRouter);
 
 
 module.exports = app;
