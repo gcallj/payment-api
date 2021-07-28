@@ -1,17 +1,23 @@
 var express = require('express');
 var router = express.Router();
-var pagarme = require('../lib/pagarme.js')
+var cielo = require('../lib/cielo.js')
 
 //get compra id e envia send 
 router.get('/:compra_id/status', function (req, res, next) {
-  pagarme.consulta(req.params.compra_id).then((result) => {
+  cielo.consulta(req.params.compra_id).then((result) => {
     let message = {};
-    switch (result.data.status) {
-      case 'processing':
+    switch (result.Payment.Status) {
+      case 0:
         message = { 'Status': 'NotFinished' };
         break;
-      case 'paid':
-        message = { 'Status': 'Authorized and paid' };
+      case 1:
+        message = { 'Status': 'Authorized' };
+        break;
+      case 2:
+        message = { 'Status': 'Payment Confirmed' };
+        break;
+      case 3:
+        message = { 'Status': 'Denied' };
         break;
       default:
         message = { 'Status': 'Failed' };
@@ -23,12 +29,11 @@ router.get('/:compra_id/status', function (req, res, next) {
 // Post send sempre que chega em /compras
 router.post('/', function (req, res, next) {
 
-  pagarme.compra(req.body).then((result) => {
-    const paymentID = result.data.id;
-    const amount = result.data.amount;
-    pagarme.captura(paymentID, amount)
+  cielo.compra(req.body).then((result) => {
+    const paymentID = result.Payment.PaymentId;
+    cielo.captura(paymentID)
       .then((result) => {
-        if (result.data.status == "paid") {
+        if (result.Status == 2) {
           res.status(201).send({
             "Status": "Sucessful",
             "Message": "Done with sucessful",
@@ -41,6 +46,7 @@ router.post('/', function (req, res, next) {
             "Message": "Problem with the credit card"
           });
         }
+
       })
       .catch((erro) => {
         console.error(erro);
